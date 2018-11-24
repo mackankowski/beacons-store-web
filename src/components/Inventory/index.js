@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
 
@@ -7,6 +7,8 @@ const InventoryPage = () => (
     <InventoryList />
   </div>
 );
+
+var unsubscribe = null;
 
 class InventoryListBase extends React.Component {
   constructor(props) {
@@ -25,7 +27,8 @@ class InventoryListBase extends React.Component {
   onLoad = () => {
     let products = [];
     this.props.firebase
-      .getAllProducts()
+      .allProducts()
+      .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           products.push(doc.data());
@@ -34,11 +37,24 @@ class InventoryListBase extends React.Component {
       .then(() => {
         this.setState({ products });
         this.setState({ loading: false });
+      })
+      .then(() => {
+        unsubscribe = this.props.firebase
+          .allProducts()
+          .onSnapshot(querySnapshot => {
+            console.log('db-updated');
+            products = [];
+            querySnapshot.forEach(doc => {
+              console.log(doc.data());
+              products.push(doc.data());
+            });
+            this.setState({ products });
+          });
       });
   };
 
   componentWillUnmount() {
-    this.props.firebase.users().off();
+    unsubscribe();
   }
 
   render() {
@@ -46,7 +62,6 @@ class InventoryListBase extends React.Component {
     return (
       <div>
         {loading ? <p>Loading...</p> : <ProductList products={products} />}
-        {/* <ProductList products={products} /> */}
       </div>
     );
   }

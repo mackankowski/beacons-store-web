@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
 import { FirebaseContext } from './components/Firebase';
+import SignInPage from './components/SignIn';
 
 class App extends Component {
   render() {
     return (
       <FirebaseContext.Consumer>
         {firebase => {
-          return <div>I've access to Firebase and render something.</div>;
+          return <SignInPage />;
         }}
       </FirebaseContext.Consumer>
     );

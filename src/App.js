@@ -4,11 +4,16 @@ import { FirebaseContext } from './components/Firebase';
 import SignInPage from './components/SignIn';
 
 class App extends Component {
+  isLogged = false;
   render() {
     return (
       <FirebaseContext.Consumer>
         {firebase => {
-          return <SignInPage />;
+          if (this.isLogged) {
+            return <p>It's logged.</p>;
+          } else {
+            return <SignInPage />;
+          }
         }}
       </FirebaseContext.Consumer>
     );

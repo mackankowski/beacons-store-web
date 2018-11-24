@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { withFirebase } from '../Firebase';
+import { compose } from 'recompose';
 
 const SignInPage = () => (
   <div>
-    <h1>SignIn</h1>
+    <h1>Sign In</h1>
     <SignInForm />
   </div>
 );
@@ -13,13 +15,15 @@ const INITIAL_STATE = {
   error: null
 };
 
-class SignInForm extends Component {
+class SignInFormBase extends Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
   }
 
   onSubmit = event => {
+    event.preventDefault();
+
     const { email, password } = this.state;
 
     this.props.firebase
@@ -31,8 +35,6 @@ class SignInForm extends Component {
       .catch(error => {
         this.setState({ error });
       });
-
-    event.preventDefault();
   };
 
   onChange = event => {
@@ -70,4 +72,8 @@ class SignInForm extends Component {
   }
 }
 
+const SignInForm = compose(withFirebase)(SignInFormBase);
+
 export default SignInPage;
+
+export { SignInForm };

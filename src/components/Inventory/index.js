@@ -1,10 +1,25 @@
 import React from 'react';
 import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
+import '../../index.css';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import Navigation from '../Navigation';
 
 const InventoryPage = () => (
   <div>
-    <InventoryList />
+    <Navigation />
+    <h1>Realtime database</h1>
+    <div>
+      <div>
+        <InventoryList />
+      </div>
+    </div>
   </div>
 );
 
@@ -54,7 +69,7 @@ class InventoryListBase extends React.Component {
   };
 
   componentWillUnmount() {
-    unsubscribe();
+    if (unsubscribe) unsubscribe();
   }
 
   render() {
@@ -68,27 +83,35 @@ class InventoryListBase extends React.Component {
 }
 
 const ProductList = ({ products }) => (
-  <table>
-    <thead>
-      <tr>
-        <th>Product name</th>
-        <th>Count</th>
-      </tr>
-    </thead>
-    <tbody>
-      {console.log(products)}
-      {products.map(product => (
-        <tr>
-          <td>
-            <p>{product.name}</p>
-          </td>
-          <td>
-            <p>{product.count}</p>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+  <Paper>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Product name</TableCell>
+          <TableCell>Count</TableCell>
+          <TableCell>Action</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {console.log(products)}
+        {products.map(product => (
+          <TableRow>
+            <TableCell>
+              <p>{product.name}</p>
+            </TableCell>
+            <TableCell>
+              <p>{product.count}</p>
+            </TableCell>
+            <TableCell>
+              <Button variant="contained" color="secondary">
+                Remove
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </Paper>
 );
 
 const InventoryList = compose(withFirebase)(InventoryListBase);

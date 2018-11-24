@@ -8,7 +8,7 @@ import * as ROUTES from './constants/routes';
 const App = () => (
   <Router>
     <div>
-      <Route exact path={ROUTES.LANDING} component={HomePage} />
+      <Route exact path={ROUTES.HOMEPAGE} component={HomePage} />
       <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route exact path={ROUTES.INVENTORY} component={InventoryPage} />
     </div>

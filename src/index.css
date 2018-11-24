@@ -3,11 +3,16 @@
 html {
   font-family: 'Roboto', sans-serif;
 }
+
+form {
+  padding: 2em;
+  min-width: 20vw;
+}
+
 .aligner {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 75vh;
 }
 
 .text-center {
@@ -16,4 +21,8 @@ html {
 
 .text-error {
   color: red;
+}
+
+.button {
+  margin-right: 1em;
 }

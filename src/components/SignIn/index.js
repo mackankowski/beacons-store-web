@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
-import './index.css';
+import '../../index.css';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { withRouter } from 'react-router-dom';
+import Paper from '@material-ui/core/Paper';
 
 const SignInPage = () => (
   <div class="aligner">
-    <div class="aligner-center">
-      <h1 class="text-center">Sign In</h1>
+    <div>
+      <h1 class="text-center">Sign in</h1>
       <SignInForm />
     </div>
   </div>
@@ -53,35 +54,37 @@ class SignInFormBase extends Component {
     const isInvalid = password === '' || email === '';
 
     return (
-      <form onSubmit={this.onSubmit} class="text-center">
-        <p>
-          <TextField
-            name="email"
-            value={email}
-            onChange={this.onChange}
-            type="text"
-            placeholder="Email Address"
-          />
-        </p>
-        <p>
-          <TextField
-            name="password"
-            value={password}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Password"
-          />
-        </p>
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={isInvalid}
-          type="submit"
-        >
-          Sign In
-        </Button>
-        {error ? <p class="text-error">{error.message}</p> : <p>&nbsp;</p>}
-      </form>
+      <Paper>
+        <form onSubmit={this.onSubmit} class="text-center">
+          <p>
+            <TextField
+              name="email"
+              value={email}
+              onChange={this.onChange}
+              type="text"
+              placeholder="Email Address"
+            />
+          </p>
+          <p>
+            <TextField
+              name="password"
+              value={password}
+              onChange={this.onChange}
+              type="password"
+              placeholder="Password"
+            />
+          </p>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={isInvalid}
+            type="submit"
+          >
+            Sign In
+          </Button>
+          {error && <p class="text-error">{error.message}</p>}
+        </form>
+      </Paper>
     );
   }
 }

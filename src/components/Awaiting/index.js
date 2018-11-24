@@ -11,13 +11,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
 
-const InventoryPage = () => (
+const AwaitingPage = () => (
   <div>
     <Navigation />
-    <h1>Realtime storage overview</h1>
+    <h1>Awaiting orders to confirm</h1>
     <div>
       <div>
-        <InventoryList />
+        <AwaitingList />
       </div>
     </div>
   </div>
@@ -25,13 +25,13 @@ const InventoryPage = () => (
 
 var unsubscribe = null;
 
-class InventoryListBase extends React.Component {
+class AwaitingListBase extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: false,
-      products: []
+      orders: []
     };
   }
 
@@ -40,28 +40,28 @@ class InventoryListBase extends React.Component {
     this.onLoad();
   }
   onLoad = () => {
-    let products = [];
+    let orders = [];
     this.props.firebase
-      .allProducts()
+      .allOrders()
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          products.push(doc.data());
+          orders.push(doc.data());
         });
       })
       .then(() => {
-        this.setState({ products });
+        this.setState({ orders });
         this.setState({ loading: false });
       })
       .then(() => {
         unsubscribe = this.props.firebase
-          .allProducts()
+          .allOrders()
           .onSnapshot(querySnapshot => {
-            products = [];
+            orders = [];
             querySnapshot.forEach(doc => {
-              products.push(doc.data());
+              orders.push(doc.data());
             });
-            this.setState({ products });
+            this.setState({ orders });
           });
       });
   };
@@ -71,28 +71,24 @@ class InventoryListBase extends React.Component {
   }
 
   render() {
-    const { products, loading } = this.state;
-    return (
-      <div>
-        {loading ? <p>Loading...</p> : <ProductList products={products} />}
-      </div>
-    );
+    const { orders, loading } = this.state;
+    return <div>{loading ? <p>Loading...</p> : console.log(orders)}</div>;
   }
 }
 
-const ProductList = ({ products }) => (
+const ProductList = ({ orders }) => (
   <Paper>
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Product name</TableCell>
-          <TableCell>Count</TableCell>
+          <TableCell>Order number</TableCell>
+          <TableCell>User mail</TableCell>
           <TableCell>Action</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {console.log(products)}
-        {products.map(product => (
+        {console.log(orders)}
+        {orders.map(product => (
           <TableRow>
             <TableCell>
               <p>{product.name}</p>
@@ -102,7 +98,7 @@ const ProductList = ({ products }) => (
             </TableCell>
             <TableCell>
               <Button variant="contained" color="secondary">
-                Remove
+                Confirm
               </Button>
             </TableCell>
           </TableRow>
@@ -112,6 +108,6 @@ const ProductList = ({ products }) => (
   </Paper>
 );
 
-const InventoryList = compose(withFirebase)(InventoryListBase);
+const AwaitingList = compose(withFirebase)(AwaitingListBase);
 
-export default InventoryPage;
+export default AwaitingPage;

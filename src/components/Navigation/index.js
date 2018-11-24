@@ -6,8 +6,7 @@ import '../../index.css';
 
 const Navigation = () => (
   <div>
-    <span class="button">
-      {' '}
+    <span className="button">
       <Button
         variant="contained"
         color="default"
@@ -18,7 +17,7 @@ const Navigation = () => (
       </Button>
     </span>
 
-    <span class="button">
+    <span className="button">
       {' '}
       <Button
         variant="contained"
@@ -30,7 +29,7 @@ const Navigation = () => (
       </Button>
     </span>
 
-    <span class="button">
+    <span className="button">
       <Button
         variant="contained"
         color="primary"

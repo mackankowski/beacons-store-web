@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
+import './index.css';
 
 const SignInPage = () => (
-  <div>
-    <h1>Sign In</h1>
-    <SignInForm />
+  <div class="aligner">
+    <div class="aligner-center">
+      <h1 class="text-center">Sign In</h1>
+      <SignInForm />
+    </div>
   </div>
 );
 
@@ -47,26 +50,29 @@ class SignInFormBase extends Component {
     const isInvalid = password === '' || email === '';
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
+      <form onSubmit={this.onSubmit} class="text-center">
+        <p>
+          <input
+            name="email"
+            value={email}
+            onChange={this.onChange}
+            type="text"
+            placeholder="Email Address"
+          />
+        </p>
+        <p>
+          <input
+            name="password"
+            value={password}
+            onChange={this.onChange}
+            type="password"
+            placeholder="Password"
+          />
+        </p>
         <button disabled={isInvalid} type="submit">
           Sign In
         </button>
-
-        {error && <p>{error.message}</p>}
+        {error ? <p>{error.message}</p> : <p>&nbsp;</p>}
       </form>
     );
   }
@@ -76,4 +82,4 @@ const SignInForm = compose(withFirebase)(SignInFormBase);
 
 export default SignInPage;
 
-export { SignInForm };
+// export { SignInForm };

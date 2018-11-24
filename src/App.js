@@ -1,23 +1,16 @@
-import React, { Component } from 'react';
-import './App.css';
-import { FirebaseContext } from './components/Firebase';
+import React from 'react';
 import SignInPage from './components/SignIn';
+import HomePage from './components/Home';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import * as ROUTES from './constants/routes';
 
-class App extends Component {
-  isLogged = false;
-  render() {
-    return (
-      <FirebaseContext.Consumer>
-        {firebase => {
-          if (this.isLogged) {
-            return <p>It's logged.</p>;
-          } else {
-            return <SignInPage />;
-          }
-        }}
-      </FirebaseContext.Consumer>
-    );
-  }
-}
+const App = () => (
+  <Router>
+    <div>
+      <Route exact path={ROUTES.LANDING} component={HomePage} />
+      <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
+    </div>
+  </Router>
+);
 
 export default App;

@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
 import './index.css';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { withRouter } from 'react-router-dom';
 
 const SignInPage = () => (
   <div class="aligner">
@@ -33,7 +36,7 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        //this.props.history.push(ROUTES.HOME);
+        this.props.history.push('/inventory');
       })
       .catch(error => {
         this.setState({ error });
@@ -52,7 +55,7 @@ class SignInFormBase extends Component {
     return (
       <form onSubmit={this.onSubmit} class="text-center">
         <p>
-          <input
+          <TextField
             name="email"
             value={email}
             onChange={this.onChange}
@@ -61,7 +64,7 @@ class SignInFormBase extends Component {
           />
         </p>
         <p>
-          <input
+          <TextField
             name="password"
             value={password}
             onChange={this.onChange}
@@ -69,17 +72,23 @@ class SignInFormBase extends Component {
             placeholder="Password"
           />
         </p>
-        <button disabled={isInvalid} type="submit">
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={isInvalid}
+          type="submit"
+        >
           Sign In
-        </button>
-        {error ? <p>{error.message}</p> : <p>&nbsp;</p>}
+        </Button>
+        {error ? <p class="text-error">{error.message}</p> : <p>&nbsp;</p>}
       </form>
     );
   }
 }
 
-const SignInForm = compose(withFirebase)(SignInFormBase);
+const SignInForm = compose(
+  withFirebase,
+  withRouter
+)(SignInFormBase);
 
 export default SignInPage;
-
-// export { SignInForm };

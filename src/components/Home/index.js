@@ -4,7 +4,11 @@ import { Redirect } from 'react-router-dom';
 class HomePage extends Component {
   isLogged = false;
   render() {
-    return this.isLogged ? <p>It's logged.</p> : <Redirect to="/signin" />;
+    return this.isLogged ? (
+      <Redirect to="/inventory" />
+    ) : (
+      <Redirect to="/signin" />
+    );
   }
 }
 

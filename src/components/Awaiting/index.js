@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
 import { withRouter } from 'react-router-dom';
+import { throws } from 'assert';
 
 const AwaitingPage = () => (
   <div>
@@ -25,21 +26,23 @@ const AwaitingPage = () => (
 );
 
 var unsubscribe = null;
-
+var tr_iter = 0;
 class AwaitingListBase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      orders: []
+      orders: [],
+      isListener: false
     };
   }
 
   componentDidMount() {
-    if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
+    // if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
     this.setState({ loading: true });
     this.onLoad();
   }
+
   onLoad = () => {
     let fb = this.props.firebase;
     let orders = [];
@@ -48,9 +51,11 @@ class AwaitingListBase extends React.Component {
     fb.allOrders()
       .get()
       .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
+        querySnapshot.docs.map(doc => {
           var obj = {};
           obj['order_id'] = doc.id;
+          obj['state'] = doc.data().state;
+          obj['user_mail'] = doc.data().user_mail;
           orders.push(obj);
           orders[orders_iter++].products = [];
           fb.allOrders()
@@ -64,28 +69,42 @@ class AwaitingListBase extends React.Component {
             })
             .then(() => {
               orders_products_iter++;
+            })
+            .then(() => {
+              this.setState({ orders });
+              this.setState({ loading: false });
             });
         });
       })
       .then(() => {
         this.setState({ orders });
-        this.setState({ loading: false });
       })
       .then(() => {
-        unsubscribe = fb.allOrders().onSnapshot(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            fb.allOrders()
-              .doc(doc.id)
-              .collection('products')
-              .onSnapshot(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                  //console.log('changed');
-                });
-              });
-          });
-        });
+        if (!this.state.isListener) {
+          this.setState({ isListener: true });
+          this.setDatabaseListener(fb);
+        }
       });
   };
+
+  setDatabaseListener(fb) {
+    unsubscribe = fb.allOrders().onSnapshot(querySnapshot => {
+      this.onLoad();
+    });
+  }
+
+  confirmClicked(order_id, order_state) {
+    let fb = this.props.firebase;
+    if (order_state === 'waiting') {
+      fb.allOrders()
+        .doc(order_id)
+        .update({ state: 'confirmed' });
+    } else {
+      fb.allOrders()
+        .doc(order_id)
+        .update({ state: 'waiting' });
+    }
+  }
 
   componentWillUnmount() {
     if (unsubscribe) unsubscribe();
@@ -94,43 +113,56 @@ class AwaitingListBase extends React.Component {
   render() {
     const { orders, loading } = this.state;
     return (
-      <div>{loading ? <p>Loading...</p> : <OrdersList orders={orders} />}</div>
+      <div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <Paper>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Order number</TableCell>
+                  <TableCell>User mail</TableCell>
+                  <TableCell>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orders.map(order => (
+                  <TableRow
+                    key={tr_iter++}
+                    className={
+                      order.state === 'waiting' ? 'bg_waiting' : 'bg_confirmed'
+                    }
+                  >
+                    <TableCell>
+                      <p>{order.order_id}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p>{order.user_mail}</p>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        onClick={() =>
+                          this.confirmClicked(order.order_id, order.state)
+                        }
+                        // disabled={order.state === 'confirmed' ? true : false}
+                      >
+                        {order.state === 'confirmed'
+                          ? 'Set waiting'
+                          : 'Set confirmed'}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
+        )}
+      </div>
     );
   }
 }
-
-const OrdersList = ({ orders }) => (
-  <p>OK</p>
-  // <Paper>
-  //   <Table>
-  //     <TableHead>
-  //       <TableRow>
-  //         <TableCell>Order number</TableCell>
-  //         <TableCell>User mail</TableCell>
-  //         <TableCell>Action</TableCell>
-  //       </TableRow>
-  //     </TableHead>
-  //     <TableBody>
-  //       {console.log(orders)}
-  //       {orders.map(product => (
-  //         <TableRow>
-  //           <TableCell>
-  //             <p>{product.name}</p>
-  //           </TableCell>
-  //           <TableCell>
-  //             <p>{product.count}</p>
-  //           </TableCell>
-  //           <TableCell>
-  //             <Button variant="contained" color="secondary">
-  //               Confirm
-  //             </Button>
-  //           </TableCell>
-  //         </TableRow>
-  //       ))}
-  //     </TableBody>
-  //   </Table>
-  // </Paper>
-);
 
 const AwaitingList = compose(
   withFirebase,

@@ -25,10 +25,13 @@ const InventoryPage = () => (
 );
 
 var unsubscribe = null;
+var tr_iter = 0;
 
 class InventoryListBase extends React.Component {
   constructor(props) {
     super(props);
+    // if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
+
     this.state = {
       loading: false,
       products: []
@@ -36,7 +39,6 @@ class InventoryListBase extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
     this.setState({ loading: true });
     this.onLoad();
   }
@@ -58,6 +60,7 @@ class InventoryListBase extends React.Component {
         unsubscribe = this.props.firebase
           .allProducts()
           .onSnapshot(querySnapshot => {
+            console.log('data changed');
             products = [];
             querySnapshot.forEach(doc => {
               products.push(doc.data());
@@ -94,7 +97,7 @@ const ProductList = ({ products }) => (
       <TableBody>
         {console.log(products)}
         {products.map(product => (
-          <TableRow>
+          <TableRow key={tr_iter++}>
             <TableCell>
               <p>{product.name}</p>
             </TableCell>
@@ -102,7 +105,7 @@ const ProductList = ({ products }) => (
               <p>{product.count}</p>
             </TableCell>
             <TableCell>
-              <Button variant="contained" color="disabled">
+              <Button variant="contained" color="primary" disabled>
                 Remove
               </Button>
             </TableCell>

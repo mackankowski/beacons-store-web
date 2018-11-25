@@ -8,9 +8,9 @@ import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
 const SignInPage = () => (
-  <div class="aligner">
+  <div className="aligner">
     <div>
-      <h1 class="text-center">Sign in</h1>
+      <h1 className="text-center">Sign in</h1>
       <SignInForm />
     </div>
   </div>
@@ -55,26 +55,28 @@ class SignInFormBase extends Component {
 
     return (
       <Paper>
-        <form onSubmit={this.onSubmit} class="text-center">
-          <p>
-            <TextField
-              name="email"
-              value={email}
-              onChange={this.onChange}
-              type="text"
-              placeholder="Email Address"
-            />
-          </p>
-          <p>
-            <TextField
-              name="password"
-              value={password}
-              onChange={this.onChange}
-              type="password"
-              placeholder="Password"
-            />
-          </p>
+        <form onSubmit={this.onSubmit} className="text-center">
+          <TextField
+            className="default-margins"
+            name="email"
+            value={email}
+            onChange={this.onChange}
+            type="text"
+            placeholder="Email Address"
+          />
+          <br />
+          <TextField
+            className="default-margins"
+            name="password"
+            value={password}
+            onChange={this.onChange}
+            type="password"
+            placeholder="Password"
+          />
+          <br />
+          <br />
           <Button
+            className="default-margins"
             variant="contained"
             color="primary"
             disabled={isInvalid}
@@ -82,7 +84,8 @@ class SignInFormBase extends Component {
           >
             Sign In
           </Button>
-          {error && <p class="text-error">{error.message}</p>}
+          <br />
+          {error && <p className="text-error">{error.message}</p>}
         </form>
       </Paper>
     );

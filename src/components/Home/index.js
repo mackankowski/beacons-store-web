@@ -1,15 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { withFirebase } from '../Firebase';
+import { compose } from 'recompose';
 
-class HomePage extends Component {
-  isLogged = false;
+const HomePage = () => (
+  <div>
+    <HomePageComponent />
+  </div>
+);
+
+class HomePageBase extends React.Component {
   render() {
-    return this.isLogged ? (
+    return this.props.firebase.isUserLogged() ? (
       <Redirect to="/inventory" />
     ) : (
       <Redirect to="/signin" />
     );
   }
 }
+
+const HomePageComponent = compose(withFirebase)(HomePageBase);
 
 export default HomePage;

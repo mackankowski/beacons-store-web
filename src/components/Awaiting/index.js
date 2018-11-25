@@ -10,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
+import { withRouter } from 'react-router-dom';
 
 const AwaitingPage = () => (
   <div>
@@ -28,7 +29,6 @@ var unsubscribe = null;
 class AwaitingListBase extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       loading: false,
       orders: []
@@ -36,6 +36,7 @@ class AwaitingListBase extends React.Component {
   }
 
   componentDidMount() {
+    if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
     this.setState({ loading: true });
     this.onLoad();
   }
@@ -92,42 +93,48 @@ class AwaitingListBase extends React.Component {
 
   render() {
     const { orders, loading } = this.state;
-    return <div>{loading ? <p>Loading...</p> : console.log(orders)}</div>;
+    return (
+      <div>{loading ? <p>Loading...</p> : <OrdersList orders={orders} />}</div>
+    );
   }
 }
 
-const ProductList = ({ orders }) => (
-  <Paper>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Order number</TableCell>
-          <TableCell>User mail</TableCell>
-          <TableCell>Action</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {console.log(orders)}
-        {orders.map(product => (
-          <TableRow>
-            <TableCell>
-              <p>{product.name}</p>
-            </TableCell>
-            <TableCell>
-              <p>{product.count}</p>
-            </TableCell>
-            <TableCell>
-              <Button variant="contained" color="secondary">
-                Confirm
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </Paper>
+const OrdersList = ({ orders }) => (
+  <p>OK</p>
+  // <Paper>
+  //   <Table>
+  //     <TableHead>
+  //       <TableRow>
+  //         <TableCell>Order number</TableCell>
+  //         <TableCell>User mail</TableCell>
+  //         <TableCell>Action</TableCell>
+  //       </TableRow>
+  //     </TableHead>
+  //     <TableBody>
+  //       {console.log(orders)}
+  //       {orders.map(product => (
+  //         <TableRow>
+  //           <TableCell>
+  //             <p>{product.name}</p>
+  //           </TableCell>
+  //           <TableCell>
+  //             <p>{product.count}</p>
+  //           </TableCell>
+  //           <TableCell>
+  //             <Button variant="contained" color="secondary">
+  //               Confirm
+  //             </Button>
+  //           </TableCell>
+  //         </TableRow>
+  //       ))}
+  //     </TableBody>
+  //   </Table>
+  // </Paper>
 );
 
-const AwaitingList = compose(withFirebase)(AwaitingListBase);
+const AwaitingList = compose(
+  withFirebase,
+  withRouter
+)(AwaitingListBase);
 
 export default AwaitingPage;

@@ -10,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
+import { withRouter } from 'react-router-dom';
 
 const InventoryPage = () => (
   <div>
@@ -28,7 +29,6 @@ var unsubscribe = null;
 class InventoryListBase extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       loading: false,
       products: []
@@ -36,6 +36,7 @@ class InventoryListBase extends React.Component {
   }
 
   componentDidMount() {
+    //if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
     this.setState({ loading: true });
     this.onLoad();
   }
@@ -101,7 +102,7 @@ const ProductList = ({ products }) => (
               <p>{product.count}</p>
             </TableCell>
             <TableCell>
-              <Button variant="contained" color="secondary">
+              <Button variant="contained" color="disabled">
                 Remove
               </Button>
             </TableCell>
@@ -112,6 +113,9 @@ const ProductList = ({ products }) => (
   </Paper>
 );
 
-const InventoryList = compose(withFirebase)(InventoryListBase);
+const InventoryList = compose(
+  withFirebase,
+  withRouter
+)(InventoryListBase);
 
 export default InventoryPage;

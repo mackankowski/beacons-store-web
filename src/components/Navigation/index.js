@@ -34,6 +34,7 @@ class NavigationBase extends React.Component {
             color="primary"
             to={ROUTES.INVENTORY}
             component={Link}
+            disabled={this.props.location.pathname === '/inventory'}
           >
             Inventory
           </Button>
@@ -45,6 +46,7 @@ class NavigationBase extends React.Component {
             color="primary"
             to={ROUTES.AWAITING}
             component={Link}
+            disabled={this.props.location.pathname === '/awaiting'}
           >
             Awaiting
           </Button>

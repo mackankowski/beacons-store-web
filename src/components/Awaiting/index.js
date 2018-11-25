@@ -11,7 +11,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
 import { withRouter } from 'react-router-dom';
-import { throws } from 'assert';
 
 const AwaitingPage = () => (
   <div>
@@ -58,7 +57,8 @@ class AwaitingListBase extends React.Component {
           obj['user_mail'] = doc.data().user_mail;
           orders.push(obj);
           orders[orders_iter++].products = [];
-          fb.allOrders()
+          return fb
+            .allOrders()
             .doc(doc.id)
             .collection('products')
             .get()
@@ -81,19 +81,19 @@ class AwaitingListBase extends React.Component {
       })
       .then(() => {
         if (!this.state.isListener) {
-          this.setState({ isListener: true });
           this.setDatabaseListener(fb);
         }
       });
   };
 
   setDatabaseListener(fb) {
+    this.setState({ isListener: true });
     unsubscribe = fb.allOrders().onSnapshot(querySnapshot => {
       this.onLoad();
     });
   }
 
-  confirmClicked(order_id, order_state) {
+  actionButtonClicked(order_id, order_state) {
     let fb = this.props.firebase;
     if (order_state === 'waiting') {
       fb.allOrders()
@@ -144,9 +144,8 @@ class AwaitingListBase extends React.Component {
                       <Button
                         variant="outlined"
                         onClick={() =>
-                          this.confirmClicked(order.order_id, order.state)
+                          this.actionButtonClicked(order.order_id, order.state)
                         }
-                        // disabled={order.state === 'confirmed' ? true : false}
                       >
                         {order.state === 'confirmed'
                           ? 'Set waiting'

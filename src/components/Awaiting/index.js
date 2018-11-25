@@ -41,24 +41,33 @@ class AwaitingListBase extends React.Component {
   }
   onLoad = () => {
     let orders = [];
+    let orders_iter = 0;
+    let orders_products_iter = 0;
     this.props.firebase
       .allOrders()
-      .doc('2xU2LI210teUYYK8qawa')
-      .collection('products')
       .get()
-      .then()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          console.log(doc.data());
-          // this.props.firebase
-          //   .allOrders()
-          //   .doc(doc.id)
-          //   .get(doc => {
-          //     console.log(doc.data());
-          //   });
-          //orders.push(doc.data());
+          var obj = {};
+          obj['order_id'] = doc.id;
+          orders.push(obj);
+          orders[orders_iter++].products = [];
+          this.props.firebase
+            .allOrders()
+            .doc(doc.id)
+            .collection('products')
+            .get()
+            .then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                orders[orders_products_iter].products.push(doc.data());
+              });
+            })
+            .then(() => {
+              orders_products_iter++;
+            });
         });
       })
+      .then(() => {})
       .then(() => {
         this.setState({ orders });
         this.setState({ loading: false });

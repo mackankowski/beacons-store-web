@@ -36,7 +36,7 @@ class InventoryListBase extends React.Component {
   }
 
   componentDidMount() {
-    //if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
+    if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
     this.setState({ loading: true });
     this.onLoad();
   }

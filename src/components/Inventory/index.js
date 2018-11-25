@@ -10,11 +10,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
+import { withRouter } from 'react-router-dom';
 
 const InventoryPage = () => (
   <div>
     <Navigation />
-    <h1>Realtime database</h1>
+    <h1>Realtime storage overview</h1>
     <div>
       <div>
         <InventoryList />
@@ -24,10 +25,12 @@ const InventoryPage = () => (
 );
 
 var unsubscribe = null;
+var tr_iter = 0;
 
 class InventoryListBase extends React.Component {
   constructor(props) {
     super(props);
+    // if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
 
     this.state = {
       loading: false,
@@ -57,10 +60,9 @@ class InventoryListBase extends React.Component {
         unsubscribe = this.props.firebase
           .allProducts()
           .onSnapshot(querySnapshot => {
-            console.log('db-updated');
+            console.log('data changed');
             products = [];
             querySnapshot.forEach(doc => {
-              console.log(doc.data());
               products.push(doc.data());
             });
             this.setState({ products });
@@ -95,7 +97,7 @@ const ProductList = ({ products }) => (
       <TableBody>
         {console.log(products)}
         {products.map(product => (
-          <TableRow>
+          <TableRow key={tr_iter++}>
             <TableCell>
               <p>{product.name}</p>
             </TableCell>
@@ -103,7 +105,7 @@ const ProductList = ({ products }) => (
               <p>{product.count}</p>
             </TableCell>
             <TableCell>
-              <Button variant="contained" color="secondary">
+              <Button variant="contained" color="primary" disabled>
                 Remove
               </Button>
             </TableCell>
@@ -114,6 +116,9 @@ const ProductList = ({ products }) => (
   </Paper>
 );
 
-const InventoryList = compose(withFirebase)(InventoryListBase);
+const InventoryList = compose(
+  withFirebase,
+  withRouter
+)(InventoryListBase);
 
 export default InventoryPage;

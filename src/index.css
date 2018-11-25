@@ -26,3 +26,15 @@ form {
 .button {
   margin-right: 1em;
 }
+
+.default-margins {
+  margin: 1em 0 !important;
+}
+
+.bg_waiting {
+  background: rgba(255, 0, 0, 0.25);
+}
+
+.bg_confirmed {
+  background: rgba(0, 128, 0, 0.25);
+}

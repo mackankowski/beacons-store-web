@@ -43,27 +43,37 @@ class AwaitingListBase extends React.Component {
     let orders = [];
     this.props.firebase
       .allOrders()
+      .doc('2xU2LI210teUYYK8qawa')
+      .collection('products')
       .get()
+      .then()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          orders.push(doc.data());
+          console.log(doc.data());
+          // this.props.firebase
+          //   .allOrders()
+          //   .doc(doc.id)
+          //   .get(doc => {
+          //     console.log(doc.data());
+          //   });
+          //orders.push(doc.data());
         });
       })
       .then(() => {
         this.setState({ orders });
         this.setState({ loading: false });
-      })
-      .then(() => {
-        unsubscribe = this.props.firebase
-          .allOrders()
-          .onSnapshot(querySnapshot => {
-            orders = [];
-            querySnapshot.forEach(doc => {
-              orders.push(doc.data());
-            });
-            this.setState({ orders });
-          });
       });
+    // .then(() => {
+    //   unsubscribe = this.props.firebase
+    //     .allOrders()
+    //     .onSnapshot(querySnapshot => {
+    //       orders = [];
+    //       querySnapshot.forEach(doc => {
+    //         orders.push(doc.data());
+    //       });
+    //       this.setState({ orders });
+    //     });
+    // });
   };
 
   componentWillUnmount() {

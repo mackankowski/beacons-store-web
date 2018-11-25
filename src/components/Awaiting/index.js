@@ -40,11 +40,11 @@ class AwaitingListBase extends React.Component {
     this.onLoad();
   }
   onLoad = () => {
+    let fb = this.props.firebase;
     let orders = [];
     let orders_iter = 0;
     let orders_products_iter = 0;
-    this.props.firebase
-      .allOrders()
+    fb.allOrders()
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -52,8 +52,7 @@ class AwaitingListBase extends React.Component {
           obj['order_id'] = doc.id;
           orders.push(obj);
           orders[orders_iter++].products = [];
-          this.props.firebase
-            .allOrders()
+          fb.allOrders()
             .doc(doc.id)
             .collection('products')
             .get()
@@ -67,22 +66,24 @@ class AwaitingListBase extends React.Component {
             });
         });
       })
-      .then(() => {})
       .then(() => {
         this.setState({ orders });
         this.setState({ loading: false });
+      })
+      .then(() => {
+        unsubscribe = fb.allOrders().onSnapshot(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            fb.allOrders()
+              .doc(doc.id)
+              .collection('products')
+              .onSnapshot(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                  //console.log('changed');
+                });
+              });
+          });
+        });
       });
-    // .then(() => {
-    //   unsubscribe = this.props.firebase
-    //     .allOrders()
-    //     .onSnapshot(querySnapshot => {
-    //       orders = [];
-    //       querySnapshot.forEach(doc => {
-    //         orders.push(doc.data());
-    //       });
-    //       this.setState({ orders });
-    //     });
-    // });
   };
 
   componentWillUnmount() {

@@ -25,12 +25,11 @@ const InventoryPage = () => (
 );
 
 var unsubscribe = null;
-var tr_iter = 0;
 
 class InventoryListBase extends React.Component {
   constructor(props) {
     super(props);
-    // if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
+    //if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
 
     this.state = {
       loading: false,
@@ -98,7 +97,7 @@ class InventoryListBase extends React.Component {
                 {console.log(products)}
                 {products.map(product => (
                   <TableRow
-                    key={tr_iter++}
+                    key={product.id}
                     className={
                       product.state === 'inactive' ? 'tr_inactive' : 'tr_active'
                     }

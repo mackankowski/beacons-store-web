@@ -11,7 +11,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
 import { withRouter } from 'react-router-dom';
-import { throws } from 'assert';
 
 const AwaitingPage = () => (
   <div>
@@ -26,7 +25,7 @@ const AwaitingPage = () => (
 );
 
 var unsubscribe = null;
-var tr_iter = 0;
+
 class AwaitingListBase extends React.Component {
   constructor(props) {
     super(props);
@@ -46,54 +45,23 @@ class AwaitingListBase extends React.Component {
   onLoad = () => {
     let fb = this.props.firebase;
     let orders = [];
-    let orders_iter = 0;
-    let orders_products_iter = 0;
     fb.allOrders()
       .get()
-      .then(querySnapshot => {
-        querySnapshot.docs.map(doc => {
-          var obj = {};
-          obj['order_id'] = doc.id;
-          obj['state'] = doc.data().state;
-          obj['user_mail'] = doc.data().user_mail;
-          orders.push(obj);
-          orders[orders_iter++].products = [];
-          fb.allOrders()
-            .doc(doc.id)
-            .collection('products')
-            .get()
-            .then(querySnapshot => {
-              querySnapshot.forEach(doc => {
-                orders[orders_products_iter].products.push(doc.data());
-              });
-            })
-            .then(() => {
-              orders_products_iter++;
-            })
-            .then(() => {
-              this.setState({ orders });
-              this.setState({ loading: false });
+      .then(() => {
+        unsubscribe = this.props.firebase
+          .allOrders()
+          .onSnapshot(querySnapshot => {
+            orders = [];
+            querySnapshot.forEach(doc => {
+              orders.push(Object.assign({ id: doc.id }, doc.data()));
             });
-        });
-      })
-      .then(() => {
-        this.setState({ orders });
-      })
-      .then(() => {
-        if (!this.state.isListener) {
-          this.setState({ isListener: true });
-          this.setDatabaseListener(fb);
-        }
+            this.setState({ orders });
+            this.setState({ loading: false });
+          });
       });
   };
 
-  setDatabaseListener(fb) {
-    unsubscribe = fb.allOrders().onSnapshot(querySnapshot => {
-      this.onLoad();
-    });
-  }
-
-  confirmClicked(order_id, order_state) {
+  actionButtonClicked(order_id, order_state) {
     let fb = this.props.firebase;
     if (order_state === 'waiting') {
       fb.allOrders()
@@ -127,15 +95,16 @@ class AwaitingListBase extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
+                {console.log(orders)}
                 {orders.map(order => (
                   <TableRow
-                    key={tr_iter++}
+                    key={order.id}
                     className={
                       order.state === 'waiting' ? 'bg_waiting' : 'bg_confirmed'
                     }
                   >
                     <TableCell>
-                      <p>{order.order_id}</p>
+                      <p>{order.id}</p>
                     </TableCell>
                     <TableCell>
                       <p>{order.user_mail}</p>
@@ -144,9 +113,8 @@ class AwaitingListBase extends React.Component {
                       <Button
                         variant="outlined"
                         onClick={() =>
-                          this.confirmClicked(order.order_id, order.state)
+                          this.actionButtonClicked(order.order_id, order.state)
                         }
-                        // disabled={order.state === 'confirmed' ? true : false}
                       >
                         {order.state === 'confirmed'
                           ? 'Set waiting'

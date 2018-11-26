@@ -28,6 +28,12 @@ class SignInFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
+  componentDidMount() {
+    console.log(this.props.firebase.isUserLogged());
+    if (this.props.firebase.isUserLogged())
+      this.props.history.push('/inventory');
+  }
+
   onSubmit = event => {
     event.preventDefault();
 

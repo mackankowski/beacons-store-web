@@ -38,3 +38,10 @@ form {
 .bg_confirmed {
   background: rgba(0, 128, 0, 0.25);
 }
+
+.tr_active {
+}
+
+.tr_inactive {
+  background: rgba(0, 0, 0, 0.1);
+}

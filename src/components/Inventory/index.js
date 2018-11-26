@@ -25,12 +25,11 @@ const InventoryPage = () => (
 );
 
 var unsubscribe = null;
-var tr_iter = 0;
 
 class InventoryListBase extends React.Component {
   constructor(props) {
     super(props);
-    // if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
+    //if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
 
     this.state = {
       loading: false,
@@ -47,28 +46,32 @@ class InventoryListBase extends React.Component {
     this.props.firebase
       .allProducts()
       .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          products.push(doc.data());
-        });
-      })
-      .then(() => {
-        this.setState({ products });
-        this.setState({ loading: false });
-      })
       .then(() => {
         unsubscribe = this.props.firebase
           .allProducts()
           .onSnapshot(querySnapshot => {
-            console.log('data changed');
             products = [];
             querySnapshot.forEach(doc => {
-              products.push(doc.data());
+              products.push(Object.assign({ id: doc.id }, doc.data()));
             });
             this.setState({ products });
+            this.setState({ loading: false });
           });
       });
   };
+
+  actionButtonClicked(product_id, product_state) {
+    let fb = this.props.firebase;
+    if (product_state === 'inactive') {
+      fb.allProducts()
+        .doc(product_id)
+        .update({ state: 'active' });
+    } else {
+      fb.allProducts()
+        .doc(product_id)
+        .update({ state: 'inactive' });
+    }
+  }
 
   componentWillUnmount() {
     if (unsubscribe) unsubscribe();
@@ -78,44 +81,54 @@ class InventoryListBase extends React.Component {
     const { products, loading } = this.state;
     return (
       <div>
-        {loading ? <p>Loading...</p> : <ProductList products={products} />}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <Paper>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Product name</TableCell>
+                  <TableCell>Count</TableCell>
+                  <TableCell>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {console.log(products)}
+                {products.map(product => (
+                  <TableRow
+                    key={product.id}
+                    className={
+                      product.state === 'inactive' ? 'tr_inactive' : 'tr_active'
+                    }
+                  >
+                    <TableCell>
+                      <p>{product.name}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p>{product.count}</p>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() =>
+                          this.actionButtonClicked(product.id, product.state)
+                        }
+                      >
+                        {product.state === 'inactive' ? 'enable' : 'disable'}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
+        )}
       </div>
     );
   }
 }
-
-const ProductList = ({ products }) => (
-  <Paper>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Product name</TableCell>
-          <TableCell>Count</TableCell>
-          <TableCell>Action</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {console.log(products)}
-        {products.map(product => (
-          <TableRow key={tr_iter++}>
-            <TableCell>
-              <p>{product.name}</p>
-            </TableCell>
-            <TableCell>
-              <p>{product.count}</p>
-            </TableCell>
-            <TableCell>
-              <Button variant="contained" color="primary" disabled>
-                Remove
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </Paper>
-);
-
 const InventoryList = compose(
   withFirebase,
   withRouter

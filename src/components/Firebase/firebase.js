@@ -19,13 +19,14 @@ class Firebase {
   allProducts = () => this.fs.collection('products');
   allOrders = () => this.fs.collection('user_orders');
   isUserLogged = () => {
-    /* @todo: fixit */
-    let user = this.auth.currentUser;
-    if (user) {
-      return true;
-    } else {
-      return false;
-    }
+    this.auth.onAuthStateChanged(user => {
+      console.log(user);
+      if (user) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   };
 }
 

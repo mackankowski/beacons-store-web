@@ -12,17 +12,7 @@ import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
 import { withRouter } from 'react-router-dom';
 
-const InventoryPage = () => (
-  <div>
-    <Navigation />
-    <h1>Realtime storage overview</h1>
-    <div>
-      <div>
-        <InventoryList />
-      </div>
-    </div>
-  </div>
-);
+const InventoryPage = () => <InventoryList />;
 
 var unsubscribe = null;
 
@@ -33,11 +23,19 @@ class InventoryListBase extends React.Component {
 
     this.state = {
       loading: false,
-      products: []
+      products: [],
+      isUserLogged: false
     };
   }
 
   componentDidMount() {
+    this.props.firebase.auth.onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ isUserLogged: true });
+      } else {
+        this.props.history.push('/signin');
+      }
+    });
     this.setState({ loading: true });
     this.onLoad();
   }
@@ -78,54 +76,71 @@ class InventoryListBase extends React.Component {
   }
 
   render() {
-    const { products, loading } = this.state;
+    const { products, loading, isUserLogged } = this.state;
     return (
-      <div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <Paper>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Product name</TableCell>
-                  <TableCell>Count</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {console.log(products)}
-                {products.map(product => (
-                  <TableRow
-                    key={product.id}
-                    className={
-                      product.state === 'inactive' ? 'tr_inactive' : 'tr_active'
-                    }
-                  >
-                    <TableCell>
-                      <p>{product.name}</p>
-                    </TableCell>
-                    <TableCell>
-                      <p>{product.count}</p>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={() =>
-                          this.actionButtonClicked(product.id, product.state)
-                        }
-                      >
-                        {product.state === 'inactive' ? 'enable' : 'disable'}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Paper>
-        )}
-      </div>
+      isUserLogged && (
+        <div>
+          <Navigation />
+          <h1>Realtime storage overview</h1>
+          <div>
+            <div>
+              <div>
+                {loading ? (
+                  <p>Loading...</p>
+                ) : (
+                  <Paper>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Product name</TableCell>
+                          <TableCell>Count</TableCell>
+                          <TableCell>Action</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {console.log(products)}
+                        {products.map(product => (
+                          <TableRow
+                            key={product.id}
+                            className={
+                              product.state === 'inactive'
+                                ? 'tr_inactive'
+                                : 'tr_active'
+                            }
+                          >
+                            <TableCell>
+                              <p>{product.name}</p>
+                            </TableCell>
+                            <TableCell>
+                              <p>{product.count}</p>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() =>
+                                  this.actionButtonClicked(
+                                    product.id,
+                                    product.state
+                                  )
+                                }
+                              >
+                                {product.state === 'inactive'
+                                  ? 'enable'
+                                  : 'disable'}
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Paper>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     );
   }
 }

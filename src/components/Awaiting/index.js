@@ -12,17 +12,7 @@ import Button from '@material-ui/core/Button';
 import Navigation from '../Navigation';
 import { withRouter } from 'react-router-dom';
 
-const AwaitingPage = () => (
-  <div>
-    <Navigation />
-    <h1>Awaiting orders to confirm</h1>
-    <div>
-      <div>
-        <AwaitingList />
-      </div>
-    </div>
-  </div>
-);
+const AwaitingPage = () => <AwaitingList />;
 
 var unsubscribe = null;
 
@@ -32,12 +22,18 @@ class AwaitingListBase extends React.Component {
     this.state = {
       loading: false,
       orders: [],
-      isListener: false
+      isUserLogged: false
     };
   }
 
   componentDidMount() {
-    // if (!this.props.firebase.isUserLogged()) this.props.history.push('/');
+    this.props.firebase.auth.onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ isUserLogged: true });
+      } else {
+        this.props.history.push('/signin');
+      }
+    });
     this.setState({ loading: true });
     this.onLoad();
   }
@@ -79,55 +75,70 @@ class AwaitingListBase extends React.Component {
   }
 
   render() {
-    const { orders, loading } = this.state;
+    const { orders, loading, isUserLogged } = this.state;
     return (
-      <div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <Paper>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Order number</TableCell>
-                  <TableCell>User mail</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {console.log(orders)}
-                {orders.map(order => (
-                  <TableRow
-                    key={order.id}
-                    className={
-                      order.state === 'waiting' ? 'bg_waiting' : 'bg_confirmed'
-                    }
-                  >
-                    <TableCell>
-                      <p>{order.id}</p>
-                    </TableCell>
-                    <TableCell>
-                      <p>{order.user_mail}</p>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        onClick={() =>
-                          this.actionButtonClicked(order.order_id, order.state)
-                        }
-                      >
-                        {order.state === 'confirmed'
-                          ? 'Set waiting'
-                          : 'Set confirmed'}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Paper>
-        )}
-      </div>
+      isUserLogged && (
+        <div>
+          <Navigation />
+          <h1>Awaiting orders to confirm</h1>
+          <div>
+            <div>
+              <div>
+                {loading ? (
+                  <p>Loading...</p>
+                ) : (
+                  <Paper>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Order number</TableCell>
+                          <TableCell>User mail</TableCell>
+                          <TableCell>Action</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {console.log(orders)}
+                        {orders.map(order => (
+                          <TableRow
+                            key={order.id}
+                            className={
+                              order.state === 'waiting'
+                                ? 'bg_waiting'
+                                : 'bg_confirmed'
+                            }
+                          >
+                            <TableCell>
+                              <p>{order.id}</p>
+                            </TableCell>
+                            <TableCell>
+                              <p>{order.user_mail}</p>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="outlined"
+                                onClick={() =>
+                                  this.actionButtonClicked(
+                                    order.order_id,
+                                    order.state
+                                  )
+                                }
+                              >
+                                {order.state === 'confirmed'
+                                  ? 'Set waiting'
+                                  : 'Set confirmed'}
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Paper>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     );
   }
 }

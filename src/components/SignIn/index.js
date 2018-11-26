@@ -7,14 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
-const SignInPage = () => (
-  <div className="aligner">
-    <div>
-      <h1 className="text-center">Sign in</h1>
-      <SignInForm />
-    </div>
-  </div>
-);
+const SignInPage = () => <SignInForm />;
 
 const INITIAL_STATE = {
   email: '',
@@ -25,13 +18,25 @@ const INITIAL_STATE = {
 class SignInFormBase extends Component {
   constructor(props) {
     super(props);
-    this.state = { ...INITIAL_STATE };
+    this.state = { ...INITIAL_STATE, isUserLogged: true };
+  }
+
+  componentWillMount() {
+    this.props.firebase.auth.onAuthStateChanged(user => {
+      console.log(user);
+      if (user) {
+        this.props.history.push('/inventory');
+      } else {
+        this.setState({ isUserLogged: false });
+      }
+    });
   }
 
   componentDidMount() {
-    console.log(this.props.firebase.isUserLogged());
-    if (this.props.firebase.isUserLogged())
-      this.props.history.push('/inventory');
+    // console.log(this.props.firebase.isUserLogged());
+    // this.props.firebase.isUserLogged().then(() => {
+    //   this.props.history.push('/inventory');
+    // });
   }
 
   onSubmit = event => {
@@ -55,45 +60,54 @@ class SignInFormBase extends Component {
   };
 
   render() {
-    const { email, password, error } = this.state;
+    const { email, password, error, isUserLogged } = this.state;
 
     const isInvalid = password === '' || email === '';
 
     return (
-      <Paper>
-        <form onSubmit={this.onSubmit} className="text-center">
-          <TextField
-            className="default-margins"
-            name="email"
-            value={email}
-            onChange={this.onChange}
-            type="text"
-            placeholder="Email Address"
-          />
-          <br />
-          <TextField
-            className="default-margins"
-            name="password"
-            value={password}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Password"
-          />
-          <br />
-          <br />
-          <Button
-            className="default-margins"
-            variant="contained"
-            color="primary"
-            disabled={isInvalid}
-            type="submit"
-          >
-            Sign In
-          </Button>
-          <br />
-          {error && <p className="text-error">{error.message}</p>}
-        </form>
-      </Paper>
+      !isUserLogged && (
+        <div>
+          <div className="aligner">
+            <div>
+              <h1 className="text-center">Sign in</h1>
+              <Paper>
+                <form onSubmit={this.onSubmit} className="text-center">
+                  <TextField
+                    className="default-margins"
+                    name="email"
+                    value={email}
+                    onChange={this.onChange}
+                    type="text"
+                    placeholder="Email Address"
+                  />
+                  <br />
+                  <TextField
+                    className="default-margins"
+                    name="password"
+                    value={password}
+                    onChange={this.onChange}
+                    type="password"
+                    placeholder="Password"
+                  />
+                  <br />
+                  <br />
+                  <Button
+                    className="default-margins"
+                    variant="contained"
+                    color="primary"
+                    disabled={isInvalid}
+                    type="submit"
+                  >
+                    Sign In
+                  </Button>
+                  <br />
+                  {error && <p className="text-error">{error.message}</p>}
+                </form>
+              </Paper>
+            </div>
+          </div>
+        </div>
+      )
     );
   }
 }

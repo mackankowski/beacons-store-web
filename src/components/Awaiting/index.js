@@ -70,6 +70,18 @@ class AwaitingListBase extends React.Component {
     }
   }
 
+  renderProducts = order_products => {
+    let products = [];
+    for (let value in order_products) {
+      products.push(
+        <p key={value}>
+          {value} x {order_products[value].count}
+        </p>
+      );
+    }
+    return products;
+  };
+
   componentWillUnmount() {
     if (unsubscribe) unsubscribe();
   }
@@ -93,6 +105,7 @@ class AwaitingListBase extends React.Component {
                         <TableRow>
                           <TableCell>Order number</TableCell>
                           <TableCell>User mail</TableCell>
+                          <TableCell>Products</TableCell>
                           <TableCell>Action</TableCell>
                         </TableRow>
                       </TableHead>
@@ -112,6 +125,9 @@ class AwaitingListBase extends React.Component {
                             </TableCell>
                             <TableCell>
                               <p>{order.user_mail}</p>
+                            </TableCell>
+                            <TableCell>
+                              {this.renderProducts(order.products)}
                             </TableCell>
                             <TableCell>
                               <Button

@@ -118,7 +118,7 @@ class AwaitingListBase extends React.Component {
                                 variant="outlined"
                                 onClick={() =>
                                   this.actionButtonClicked(
-                                    order.order_id,
+                                    order.id,
                                     order.state
                                   )
                                 }

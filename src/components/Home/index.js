@@ -1,24 +1,28 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
+import { withRouter } from 'react-router-dom';
 
-const HomePage = () => (
-  <div>
-    <HomePageComponent />
-  </div>
-);
+const HomePage = () => <HomePageComponent />;
 
 class HomePageBase extends React.Component {
+  componentDidMount() {
+    this.props.firebase.auth.onAuthStateChanged(user => {
+      if (user) {
+        this.props.history.push('/inventory');
+      } else {
+        this.props.history.push('/signin');
+      }
+    });
+  }
   render() {
-    return this.props.firebase.isUserLogged() ? (
-      <Redirect to="/inventory" />
-    ) : (
-      <Redirect to="/signin" />
-    );
+    return <div />;
   }
 }
 
-const HomePageComponent = compose(withFirebase)(HomePageBase);
+const HomePageComponent = compose(
+  withFirebase,
+  withRouter
+)(HomePageBase);
 
 export default HomePage;

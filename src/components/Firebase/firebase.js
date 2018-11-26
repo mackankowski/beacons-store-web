@@ -18,16 +18,6 @@ class Firebase {
   doSignOut = () => this.auth.signOut();
   allProducts = () => this.fs.collection('products');
   allOrders = () => this.fs.collection('user_orders');
-  isUserLogged = () => {
-    this.auth.onAuthStateChanged(user => {
-      console.log(user);
-      if (user) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  };
 }
 
 export default Firebase;

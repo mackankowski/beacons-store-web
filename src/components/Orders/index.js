@@ -1,6 +1,8 @@
 import React from 'react';
 import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
+import { withRouter } from 'react-router-dom';
+import Navigation from '../Navigation';
 import '../../index.css';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,12 +11,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import Navigation from '../Navigation';
-import { withRouter } from 'react-router-dom';
+import Chip from '@material-ui/core/Chip';
 
 const OrdersPage = () => <OrdersList />;
 
-var unsubscribe = null;
+var unsubscribeOrders = null;
+var unsubscribeProducts = null;
 
 class OrdersListBase extends React.Component {
   constructor(props) {
@@ -22,6 +24,7 @@ class OrdersListBase extends React.Component {
     this.state = {
       loading: false,
       orders: [],
+      products: {},
       isUserLogged: false
     };
   }
@@ -35,26 +38,31 @@ class OrdersListBase extends React.Component {
       }
     });
     this.setState({ loading: true });
-    this.onLoad();
+    this.parseData();
   }
 
-  onLoad = () => {
-    let fb = this.props.firebase;
+  parseData = () => {
     let orders = [];
-    fb.allOrders()
-      .get()
-      .then(() => {
-        unsubscribe = this.props.firebase
-          .allOrders()
-          .onSnapshot(querySnapshot => {
-            orders = [];
-            querySnapshot.forEach(doc => {
-              orders.push(Object.assign({ id: doc.id }, doc.data()));
-            });
-            this.setState({ orders });
-            this.setState({ loading: false });
-          });
+    let products = {};
+    let fb = this.props.firebase;
+    unsubscribeOrders = fb.allOrders().onSnapshot(querySnapshot => {
+      orders = [];
+      querySnapshot.forEach(doc => {
+        orders.push(Object.assign({ id: doc.id }, doc.data()));
       });
+      this.setState({ orders });
+    });
+
+    unsubscribeProducts = fb.allProducts().onSnapshot(querySnapshot => {
+      products = [];
+      querySnapshot.forEach(doc => {
+        let obj = {};
+        obj[doc.id] = doc.data();
+        Object.assign(products, obj);
+      });
+      this.setState({ products });
+      this.setState({ loading: false });
+    });
   };
 
   actionButtonClicked(order_id, order_state) {
@@ -87,10 +95,14 @@ class OrdersListBase extends React.Component {
 
   renderProducts = order_products => {
     let products = [];
-    for (let value in order_products) {
+    for (let product_id in order_products) {
       products.push(
-        <p key={value}>
-          {value} x {order_products[value].count}
+        <p key={product_id}>
+          {this.state.products[product_id].name}{' '}
+          <Chip
+            label={order_products[product_id].count}
+            className="chip_default"
+          />
         </p>
       );
     }
@@ -98,7 +110,8 @@ class OrdersListBase extends React.Component {
   };
 
   componentWillUnmount() {
-    if (unsubscribe) unsubscribe();
+    if (unsubscribeOrders) unsubscribeOrders();
+    if (unsubscribeProducts) unsubscribeProducts();
   }
 
   render() {
@@ -127,7 +140,6 @@ class OrdersListBase extends React.Component {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {console.log(orders)}
                           {orders.map(order => (
                             <TableRow
                               key={order.id}
@@ -140,7 +152,10 @@ class OrdersListBase extends React.Component {
                                 <p>{order.user_mail}</p>
                               </TableCell>
                               <TableCell>
-                                {this.renderProducts(order.products)}
+                                {this.renderProducts(
+                                  order.products,
+                                  this.props.firebase
+                                )}
                               </TableCell>
                               <TableCell>
                                 {(order.state === 'waiting' ||

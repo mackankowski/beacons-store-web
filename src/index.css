@@ -50,3 +50,10 @@ form {
 .span_legend {
   padding: 0.5em;
 }
+
+.chip_default {
+  background: rgba(0, 0, 0, 0.25) !important;
+  width: 1.5em !important;
+  height: 1.5em !important;
+  color: white !important;
+}

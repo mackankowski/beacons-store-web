@@ -35,25 +35,19 @@ class ProductsListBase extends React.Component {
       }
     });
     this.setState({ loading: true });
-    this.onLoad();
+    this.parseData();
   }
-  onLoad = () => {
+  parseData = () => {
     let products = [];
-    this.props.firebase
-      .allProducts()
-      .get()
-      .then(() => {
-        unsubscribe = this.props.firebase
-          .allProducts()
-          .onSnapshot(querySnapshot => {
-            products = [];
-            querySnapshot.forEach(doc => {
-              products.push(Object.assign({ id: doc.id }, doc.data()));
-            });
-            this.setState({ products });
-            this.setState({ loading: false });
-          });
+    let fb = this.props.firebase;
+    unsubscribe = fb.allProducts().onSnapshot(querySnapshot => {
+      products = [];
+      querySnapshot.forEach(doc => {
+        products.push(Object.assign({ id: doc.id }, doc.data()));
       });
+      this.setState({ products });
+      this.setState({ loading: false });
+    });
   };
 
   actionButtonClicked(product_id, product_state) {
@@ -117,7 +111,6 @@ class ProductsListBase extends React.Component {
                               <TableCell>
                                 <Button
                                   variant="outlined"
-                                  color="primary"
                                   onClick={() =>
                                     this.actionButtonClicked(
                                       product.id,

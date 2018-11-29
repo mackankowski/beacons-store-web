@@ -22,8 +22,7 @@ class OrdersListBase extends React.Component {
     this.state = {
       loading: false,
       orders: [],
-      isUserLogged: false,
-      orderState: null
+      isUserLogged: false
     };
   }
 
@@ -109,6 +108,7 @@ class OrdersListBase extends React.Component {
         <div>
           <Navigation />
           <h1>Orders</h1>
+          <p>Pending orders from mobile customers</p>
           <div>
             <div>
               <div>

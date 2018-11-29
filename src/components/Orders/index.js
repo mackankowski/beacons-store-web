@@ -66,16 +66,69 @@ class OrdersListBase extends React.Component {
     });
   };
 
-  actionButtonClicked(order_id, order_state) {
+  getProductsToProceed = order_id => {
+    let productsToProceed = {};
+
+    for (let product_id in this.state.products) {
+      this.state.orders.forEach(order => {
+        if (order.id === order_id && order.products[product_id]) {
+          let obj = {};
+          obj[product_id] = order.products[product_id].count;
+          Object.assign(productsToProceed, obj);
+        }
+      });
+    }
+
+    return productsToProceed;
+  };
+
+  updateProductsCount(operationType, productsToProceed) {
     let fb = this.props.firebase;
-    if (order_state === 'waiting') {
-      fb.allOrders()
-        .doc(order_id)
-        .update({ state: 'confirmed' });
-    } else {
-      fb.allOrders()
-        .doc(order_id)
-        .update({ state: 'waiting' });
+
+    for (let key in productsToProceed) {
+      let product_id = key;
+      let product_count = productsToProceed[key];
+      let updated_product_count;
+      switch (operationType) {
+        case '+':
+          updated_product_count =
+            this.state.products[product_id].count + product_count;
+          break;
+        case '-':
+          updated_product_count =
+            this.state.products[product_id].count - product_count;
+          break;
+        default:
+          break;
+      }
+      fb.allProducts()
+        .doc(product_id)
+        .update({ count: updated_product_count });
+    }
+  }
+
+  actionButtonClicked(order_id, order_state) {
+    let productsToProceed = this.getProductsToProceed(order_id);
+    let operationType = null;
+    let fb = this.props.firebase;
+    switch (order_state) {
+      case 'waiting':
+        fb.allOrders()
+          .doc(order_id)
+          .update({ state: 'confirmed' });
+        operationType = '-';
+        break;
+      case 'confirmed':
+        fb.allOrders()
+          .doc(order_id)
+          .update({ state: 'waiting' });
+        operationType = '+';
+        break;
+      default:
+        break;
+    }
+    if (operationType != null) {
+      this.updateProductsCount(operationType, productsToProceed);
     }
   }
 
@@ -98,13 +151,13 @@ class OrdersListBase extends React.Component {
     let products = [];
     for (let product_id in order_products) {
       products.push(
-        <p key={product_id}>
-          {this.state.products[product_id].name}{' '}
+        <div key={product_id} className="paragraph_paddings">
+          {this.state.products[product_id].name.toUpperCase()}{' '}
           <Chip
             label={order_products[product_id].count}
             className="chip_default"
           />
-        </p>
+        </div>
       );
     }
     return products;

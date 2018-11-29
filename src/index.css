@@ -57,3 +57,7 @@ form {
   height: 1.5em !important;
   color: white !important;
 }
+
+.paragraph_paddings {
+  padding: 0.5em 0;
+}

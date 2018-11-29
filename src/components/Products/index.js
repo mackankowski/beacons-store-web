@@ -1,6 +1,8 @@
 import React from 'react';
 import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
+import { withRouter } from 'react-router-dom';
+import Navigation from '../Navigation';
 import '../../index.css';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,8 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import Navigation from '../Navigation';
-import { withRouter } from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ProductsPage = () => <ProductsList />;
 
@@ -79,7 +80,7 @@ class ProductsListBase extends React.Component {
             <div>
               <div>
                 {loading ? (
-                  <p>Loading...</p>
+                  <CircularProgress />
                 ) : (
                   <div>
                     <Paper>

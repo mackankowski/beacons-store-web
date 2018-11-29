@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const OrdersPage = () => <OrdersList />;
 
@@ -126,7 +127,7 @@ class OrdersListBase extends React.Component {
             <div>
               <div>
                 {loading ? (
-                  <p>Loading...</p>
+                  <CircularProgress />
                 ) : (
                   <div>
                     <Paper>

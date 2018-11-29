@@ -104,8 +104,8 @@ class ProductsListBase extends React.Component {
                               key={product.id}
                               className={
                                 product.state === 'inactive'
-                                  ? 'tr_inactive'
-                                  : 'tr_active'
+                                  ? 'bg_row_idle'
+                                  : 'bg_row_confirmed'
                               }
                             >
                               <TableCell>
@@ -136,9 +136,12 @@ class ProductsListBase extends React.Component {
                       </Table>
                     </Paper>
                     <br />
+                    <span className="bg_row_confirmed white_text span_legend">
+                      Active
+                    </span>{' '}
                     <span className="bg_row_idle white_text span_legend">
                       Inactive
-                    </span>{' '}
+                    </span>
                   </div>
                 )}
               </div>

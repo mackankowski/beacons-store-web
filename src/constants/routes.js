@@ -1,4 +1,4 @@
 export const INVENTORY = '/inventory';
-export const AWAITING = '/awaiting';
+export const ORDERS = '/orders';
 export const HOMEPAGE = '/';
 export const SIGN_IN = '/signin';

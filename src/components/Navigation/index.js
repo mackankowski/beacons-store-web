@@ -44,11 +44,11 @@ class NavigationBase extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            to={ROUTES.AWAITING}
+            to={ROUTES.ORDERS}
             component={Link}
-            disabled={this.props.location.pathname === '/awaiting'}
+            disabled={this.props.location.pathname === '/orders'}
           >
-            Awaiting
+            Orders
           </Button>
         </span>
       </div>

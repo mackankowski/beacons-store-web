@@ -2,7 +2,7 @@ import React from 'react';
 import SignInPage from './components/SignIn';
 import HomePage from './components/Home';
 import InventoryPage from './components/Inventory';
-import AwaitingPage from './components/Awaiting';
+import OrdersPage from './components/Orders';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 
@@ -17,7 +17,7 @@ class App extends React.Component {
           <Route exact path={ROUTES.HOMEPAGE} component={HomePage} />
           <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
           <Route exact path={ROUTES.INVENTORY} component={InventoryPage} />
-          <Route exact path={ROUTES.AWAITING} component={AwaitingPage} />
+          <Route exact path={ROUTES.ORDERS} component={OrdersPage} />
         </div>
       </Router>
     );

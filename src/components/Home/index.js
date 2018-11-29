@@ -9,7 +9,7 @@ class HomePageBase extends React.Component {
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
-        this.props.history.push('/inventory');
+        this.props.history.push('/products');
       } else {
         this.props.history.push('/signin');
       }

@@ -32,11 +32,11 @@ class NavigationBase extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            to={ROUTES.INVENTORY}
+            to={ROUTES.PRODUCTS}
             component={Link}
-            disabled={this.props.location.pathname === '/inventory'}
+            disabled={this.props.location.pathname === '/products'}
           >
-            Inventory
+            Products
           </Button>
         </span>
 
@@ -44,11 +44,11 @@ class NavigationBase extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            to={ROUTES.AWAITING}
+            to={ROUTES.ORDERS}
             component={Link}
-            disabled={this.props.location.pathname === '/awaiting'}
+            disabled={this.props.location.pathname === '/orders'}
           >
-            Awaiting
+            Orders
           </Button>
         </span>
       </div>

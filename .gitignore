@@ -24,3 +24,4 @@ yarn-error.log*
 
 src/components/Firebase/config.js
 .firebase/
+.vscode/

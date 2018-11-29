@@ -25,18 +25,11 @@ class SignInFormBase extends Component {
     this.props.firebase.auth.onAuthStateChanged(user => {
       console.log(user);
       if (user) {
-        this.props.history.push('/inventory');
+        this.props.history.push('/products');
       } else {
         this.setState({ isUserLogged: false });
       }
     });
-  }
-
-  componentDidMount() {
-    // console.log(this.props.firebase.isUserLogged());
-    // this.props.firebase.isUserLogged().then(() => {
-    //   this.props.history.push('/inventory');
-    // });
   }
 
   onSubmit = event => {
@@ -48,7 +41,7 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push('/inventory');
+        this.props.history.push('/products');
       })
       .catch(error => {
         this.setState({ error });

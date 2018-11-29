@@ -31,17 +31,33 @@ form {
   margin: 1em 0 !important;
 }
 
-.bg_waiting {
+.bg_row_idle {
+  background: rgba(128, 128, 128, 0.15);
+}
+
+.bg_row_waiting {
   background: rgba(255, 0, 0, 0.25);
 }
 
-.bg_confirmed {
+.bg_row_confirmed {
   background: rgba(0, 128, 0, 0.25);
 }
 
-.tr_active {
+.white_text {
+  color: white;
 }
 
-.tr_inactive {
-  background: rgba(0, 0, 0, 0.1);
+.span_legend {
+  padding: 0.5em;
+}
+
+.chip_default {
+  background: rgba(0, 0, 0, 0.25) !important;
+  width: 1.5em !important;
+  height: 1.5em !important;
+  color: white !important;
+}
+
+.paragraph_paddings {
+  padding: 0.5em 0;
 }

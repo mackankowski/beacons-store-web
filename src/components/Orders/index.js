@@ -14,8 +14,6 @@ import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const OrdersPage = () => <OrdersList />;
-
 var unsubscribeOrders = null;
 var unsubscribeProducts = null;
 
@@ -182,70 +180,70 @@ class OrdersListBase extends React.Component {
                 {loading ? (
                   <CircularProgress />
                 ) : (
-                  <div>
-                    <Paper>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Order number</TableCell>
-                            <TableCell>User mail</TableCell>
-                            <TableCell>Products</TableCell>
-                            <TableCell>Action</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {orders.map(order => (
-                            <TableRow
-                              key={order.id}
-                              className={this.setRowStyle(order.state)}
-                            >
-                              <TableCell>
-                                <p>{order.id}</p>
-                              </TableCell>
-                              <TableCell>
-                                <p>{order.user_mail}</p>
-                              </TableCell>
-                              <TableCell>
-                                {this.renderProducts(
-                                  order.products,
-                                  this.props.firebase
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {(order.state === 'waiting' ||
-                                  order.state === 'confirmed') && (
-                                  <Button
-                                    variant="outlined"
-                                    onClick={() =>
-                                      this.actionButtonClicked(
-                                        order.id,
-                                        order.state
-                                      )
-                                    }
-                                  >
-                                    {order.state === 'confirmed'
-                                      ? 'Set waiting'
-                                      : 'Set confirmed'}
-                                  </Button>
-                                )}
-                              </TableCell>
+                    <div>
+                      <Paper>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Order number</TableCell>
+                              <TableCell>User mail</TableCell>
+                              <TableCell>Products</TableCell>
+                              <TableCell>Action</TableCell>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </Paper>
-                    <br />
-                    <span className="bg_row_idle white_text span_legend">
-                      Idle
+                          </TableHead>
+                          <TableBody>
+                            {orders.map(order => (
+                              <TableRow
+                                key={order.id}
+                                className={this.setRowStyle(order.state)}
+                              >
+                                <TableCell>
+                                  <p>{order.id}</p>
+                                </TableCell>
+                                <TableCell>
+                                  <p>{order.user_mail}</p>
+                                </TableCell>
+                                <TableCell>
+                                  {this.renderProducts(
+                                    order.products,
+                                    this.props.firebase
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {(order.state === 'waiting' ||
+                                    order.state === 'confirmed') && (
+                                      <Button
+                                        variant="outlined"
+                                        onClick={() =>
+                                          this.actionButtonClicked(
+                                            order.id,
+                                            order.state
+                                          )
+                                        }
+                                      >
+                                        {order.state === 'confirmed'
+                                          ? 'Set waiting'
+                                          : 'Set confirmed'}
+                                      </Button>
+                                    )}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                      <br />
+                      <span className="bg_row_idle white_text span_legend">
+                        Idle
                     </span>{' '}
-                    <span className="bg_row_waiting white_text span_legend">
-                      Waiting
+                      <span className="bg_row_waiting white_text span_legend">
+                        Waiting
                     </span>{' '}
-                    <span className="bg_row_confirmed white_text span_legend">
-                      Confirmed
+                      <span className="bg_row_confirmed white_text span_legend">
+                        Confirmed
                     </span>
-                  </div>
-                )}
+                    </div>
+                  )}
               </div>
             </div>
           </div>
@@ -260,4 +258,4 @@ const OrdersList = compose(
   withRouter
 )(OrdersListBase);
 
-export default OrdersPage;
+export default OrdersList;

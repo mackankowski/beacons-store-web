@@ -1,8 +1,13 @@
 # Beacon Store for Web
 
-Build with React, React-Router and Google Firebase as backend services.
+Built with React, React-Router and Google Firebase as backend services.
 
 **[DEMO]** [beacon-store-android.firebaseapp.com](https://beacon-store-android.firebaseapp.com/)
+
+To sign in:
+
+- email: `demo@beacons.store`
+- password: `beacons.store`
 
 ## Get started
 

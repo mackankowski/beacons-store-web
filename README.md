@@ -6,7 +6,19 @@ Build with React, React-Router and Google Firebase as backend services.
 
 ## Get started
 
-- Make sure you copied Firebase configuration file from **sentisive-data** repository into this project.
+- Create Firebase configuration file `<project_directory>/src/components/Firebase/config.js` and fill up by following template:
+```
+const config = {
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: ''
+};
+
+export default config;
+```
 
 - Make sure you have installed **node.js** with **npm** [https://nodejs.org/en/](https://nodejs.org/en/).
 

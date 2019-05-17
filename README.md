@@ -4,7 +4,7 @@ Built with React, React-Router and Google Firebase as backend services.
 
 ## Demo
 
- [beacon-store-android.firebaseapp.com](https://beacon-store-android.firebaseapp.com/)
+ [beacons.store](https://beacon-store-android.firebaseapp.com/)
 
 To sign in:
 

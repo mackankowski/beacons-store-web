@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
+import * as ROUTES from '../../constants/routes'
 
 const INITIAL_STATE = {
   email: '',
@@ -22,7 +23,7 @@ class SignInComponent extends Component {
   componentWillMount() {
     this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
-        this.props.history.push('/products');
+        this.props.history.push(ROUTES.PRODUCTS);
       } else {
         this.setState({ isUserLogged: false });
       }
@@ -38,7 +39,7 @@ class SignInComponent extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push('/products');
+        this.props.history.push(ROUTES.PRODUCTS);
       })
       .catch(error => {
         this.setState({ error });

@@ -13,6 +13,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import * as ROUTES from '../../constants/routes'
 
 var unsubscribeOrders = null;
 var unsubscribeProducts = null;
@@ -33,7 +34,7 @@ class OrdersComponent extends React.Component {
       if (user) {
         this.setState({ isUserLogged: true });
       } else {
-        this.props.history.push('/signin');
+        this.props.history.push(ROUTES.SIGNIN);
       }
     });
     this.setState({ loading: true });

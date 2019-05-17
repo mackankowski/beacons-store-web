@@ -7,10 +7,11 @@ import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 
+
 class NavigationComponent extends React.Component {
   signOut = () => {
     this.props.firebase.doSignOut().then(() => {
-      this.props.history.push('/');
+      this.props.history.push(ROUTES.HOME);
     });
   };
   render() {

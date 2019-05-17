@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import * as ROUTES from '../../constants/routes'
 
 var unsubscribe = null;
 
@@ -30,7 +31,7 @@ class ProductsComponent extends React.Component {
       if (user) {
         this.setState({ isUserLogged: true });
       } else {
-        this.props.history.push('/signin');
+        this.props.history.push(ROUTES.SIGNIN);
       }
     });
     this.setState({ loading: true });

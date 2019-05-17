@@ -14,8 +14,8 @@ class App extends React.Component {
     return (
       <Router>
         <div>
-          <Route exact path={ROUTES.HOMEPAGE} component={HomePage} />
-          <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
+          <Route exact path={ROUTES.HOME} component={HomePage} />
+          <Route exact path={ROUTES.SIGNIN} component={SignInPage} />
           <Route exact path={ROUTES.PRODUCTS} component={ProductsPage} />
           <Route exact path={ROUTES.ORDERS} component={OrdersPage} />
         </div>

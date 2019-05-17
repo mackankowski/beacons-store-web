@@ -91,7 +91,6 @@ class ProductsComponent extends React.Component {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {console.log(products)}
                             {products.map(product => (
                               <TableRow
                                 key={product.id}

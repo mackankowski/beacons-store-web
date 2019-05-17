@@ -26,3 +26,4 @@ src/components/Firebase/config.js
 .firebase/
 .vscode/
 package-lock.json
+yarn.lock

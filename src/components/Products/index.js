@@ -13,11 +13,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const ProductsPage = () => <ProductsList />;
-
 var unsubscribe = null;
 
-class ProductsListBase extends React.Component {
+class ProductsComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -82,62 +80,62 @@ class ProductsListBase extends React.Component {
                 {loading ? (
                   <CircularProgress />
                 ) : (
-                  <div>
-                    <Paper>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Product name</TableCell>
-                            <TableCell>Count</TableCell>
-                            <TableCell>Action</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {console.log(products)}
-                          {products.map(product => (
-                            <TableRow
-                              key={product.id}
-                              className={
-                                product.state === 'inactive'
-                                  ? 'bg_row_idle'
-                                  : 'bg_row_confirmed'
-                              }
-                            >
-                              <TableCell>
-                                <p>{product.name}</p>
-                              </TableCell>
-                              <TableCell>
-                                <p>{product.count}</p>
-                              </TableCell>
-                              <TableCell>
-                                <Button
-                                  variant="outlined"
-                                  onClick={() =>
-                                    this.actionButtonClicked(
-                                      product.id,
-                                      product.state
-                                    )
-                                  }
-                                >
-                                  {product.state === 'inactive'
-                                    ? 'enable'
-                                    : 'disable'}
-                                </Button>
-                              </TableCell>
+                    <div>
+                      <Paper>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Product name</TableCell>
+                              <TableCell>Count</TableCell>
+                              <TableCell>Action</TableCell>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </Paper>
-                    <br />
-                    <span className="bg_row_confirmed white_text span_legend">
-                      Active
+                          </TableHead>
+                          <TableBody>
+                            {console.log(products)}
+                            {products.map(product => (
+                              <TableRow
+                                key={product.id}
+                                className={
+                                  product.state === 'inactive'
+                                    ? 'bg_row_idle'
+                                    : 'bg_row_confirmed'
+                                }
+                              >
+                                <TableCell>
+                                  <p>{product.name}</p>
+                                </TableCell>
+                                <TableCell>
+                                  <p>{product.count}</p>
+                                </TableCell>
+                                <TableCell>
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                      this.actionButtonClicked(
+                                        product.id,
+                                        product.state
+                                      )
+                                    }
+                                  >
+                                    {product.state === 'inactive'
+                                      ? 'enable'
+                                      : 'disable'}
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                      <br />
+                      <span className="bg_row_confirmed white_text span_legend">
+                        Active
                     </span>{' '}
-                    <span className="bg_row_idle white_text span_legend">
-                      Inactive
+                      <span className="bg_row_idle white_text span_legend">
+                        Inactive
                     </span>
-                  </div>
-                )}
+                    </div>
+                  )}
               </div>
             </div>
           </div>
@@ -146,9 +144,9 @@ class ProductsListBase extends React.Component {
     );
   }
 }
-const ProductsList = compose(
+const ProductsCompose = compose(
   withFirebase,
   withRouter
-)(ProductsListBase);
+)(ProductsComponent);
 
-export default ProductsPage;
+export default ProductsCompose;

@@ -7,13 +7,7 @@ import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 
-const Navigation = () => (
-  <div>
-    <NavigationComponent />
-  </div>
-);
-
-class NavigationBase extends React.Component {
+class NavigationComponent extends React.Component {
   signOut = () => {
     this.props.firebase.doSignOut().then(() => {
       this.props.history.push('/');
@@ -56,9 +50,9 @@ class NavigationBase extends React.Component {
   }
 }
 
-const NavigationComponent = compose(
+const NavigationCompose = compose(
   withFirebase,
   withRouter
-)(NavigationBase);
+)(NavigationComponent);
 
-export default Navigation;
+export default NavigationCompose;

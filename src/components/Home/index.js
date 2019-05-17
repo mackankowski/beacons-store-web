@@ -3,9 +3,7 @@ import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
 
-const HomePage = () => <HomePageComponent />;
-
-class HomePageBase extends React.Component {
+class HomeComponent extends React.Component {
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
@@ -20,9 +18,9 @@ class HomePageBase extends React.Component {
   }
 }
 
-const HomePageComponent = compose(
+const HomeCompose = compose(
   withFirebase,
   withRouter
-)(HomePageBase);
+)(HomeComponent);
 
-export default HomePage;
+export default HomeCompose;

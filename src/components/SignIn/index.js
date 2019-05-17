@@ -7,15 +7,13 @@ import TextField from '@material-ui/core/TextField';
 import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
-const SignInPage = () => <SignInForm />;
-
 const INITIAL_STATE = {
   email: '',
   password: '',
   error: null
 };
 
-class SignInFormBase extends Component {
+class SignInComponent extends Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE, isUserLogged: true };
@@ -23,7 +21,6 @@ class SignInFormBase extends Component {
 
   componentWillMount() {
     this.props.firebase.auth.onAuthStateChanged(user => {
-      console.log(user);
       if (user) {
         this.props.history.push('/products');
       } else {
@@ -105,9 +102,9 @@ class SignInFormBase extends Component {
   }
 }
 
-const SignInForm = compose(
+const SignInCompose = compose(
   withFirebase,
   withRouter
-)(SignInFormBase);
+)(SignInComponent);
 
-export default SignInPage;
+export default SignInCompose;

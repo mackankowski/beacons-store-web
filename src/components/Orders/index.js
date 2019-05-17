@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 var unsubscribeOrders = null;
 var unsubscribeProducts = null;
 
-class OrdersListBase extends React.Component {
+class OrdersComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -253,9 +253,9 @@ class OrdersListBase extends React.Component {
   }
 }
 
-const OrdersList = compose(
+const OrdersCompose = compose(
   withFirebase,
   withRouter
-)(OrdersListBase);
+)(OrdersComponent);
 
-export default OrdersList;
+export default OrdersCompose;

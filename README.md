@@ -1,4 +1,4 @@
-# Beacon Store for Web
+# Beacons Store for Web
 
 Built with React, React-Router and Google Firebase as backend services.
 
